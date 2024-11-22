@@ -43,28 +43,24 @@ def join_special_values(txt):
             between = line[start_index:end_index]
             after = line[end_index:]
 
-            between = between.replace("),(", ")(").replace("(", "[").replace(")", "]")
-
-            line = f"{before},{after.strip(',')},{between}"
+            between = between.replace("),(", ")(")
+            line = f"{before}{after.strip(',')},{between}"
         modified_lines.append(line)
     return modified_lines
 
 def set_values(txt):
-    #p1 #p2 #p3 #p4 #p5 ...  #p6
     null = "Null"
     updated_txt = []
 
     for line in txt:
         fields = line.split(',')
         if "Alt" in fields:
+            print("alt")
             continue
         fields[5:5] = [null] * 25
         updated_txt.append(','.join(fields))
     return updated_txt
         
-            
-
-    return txt
 def remove_keys(txt):
     updated_txt = []
     for line in txt:
@@ -79,7 +75,6 @@ def remove_keys(txt):
         updated_txt.append(','.join(values))
     return updated_txt
 
-
 def separate_by_line(txt):
     return txt.replace("[", "").split("],")
 
@@ -93,9 +88,13 @@ def main():
     txt = dash_to_comma(txt)
     txt = separate_by_line(txt)
     txt = set_values(txt)
-    txt = remove_keys(txt)
+    #txt = remove_keys(txt)
     txt = join_special_values(txt)
 
     print(txt[1])
+    file = open("trace.csv", "w")
+    for line in txt:
+        file.write(f"{line}\n")
+    file.close()
 if __name__ == "__main__":
     main()
