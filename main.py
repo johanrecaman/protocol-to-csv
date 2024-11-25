@@ -26,39 +26,37 @@ def dash_to_comma(txt):
         if txt[i] == "-" and txt[i-1] not in exceptions:
             result.append(",")
         elif txt[i] == "-" and txt[i-1] == ":" and not txt[i+1].isdigit():
-            result.append("NULL")
+            result.append("Null")
         else:
             result.append(txt[i]) 
     return ''.join(result)
 
 def join_special_values(txt):
+    null =  "Null"
     modified_lines = []
 
     for line in txt:
-        if '(' in line:
-            start_index = line.index('(')
-            end_index = line.rindex(')') + 1
-
-            before = line[:start_index]
-            between = line[start_index:end_index]
-            after = line[end_index:]
-
-            between = between.replace("),(", ")(").replace("(", "[").replace(")", "]")
-
-            line = f"{before},{after.strip(',')},{between}"
+        fields = line.split(',')
+        if '(' not in line:
+            fields[5:5] = [null]
+            line = ','.join(fields)
+        line = line.replace("),(", ")(")
         modified_lines.append(line)
     return modified_lines
 
-def set_values(txt):
-    #p1 #p2 #p3 #p4 #p5 ...  #p6
+def set_null(txt):
     null = "Null"
     updated_txt = []
 
     for line in txt:
         fields = line.split(',')
-        if "Alt" in fields:
-            continue
-        fields[5:5] = [null] * 25
+        if "Alt" not in line:
+            if '(' in line:
+                fields[6:6] = [null] * 25
+            else:
+                fields[5:5] = [null] * 25
+        if len(fields) == 31:
+            fields.append(null)
         updated_txt.append(','.join(fields))
     return updated_txt
         
@@ -76,23 +74,29 @@ def remove_keys(txt):
         updated_txt.append(','.join(values))
     return updated_txt
 
-
 def separate_by_line(txt):
     return txt.replace("[", "").split("],")
 
-def main():
-    file = open("trace.html", "r")
-    txt = file.read()
-    file.close()
+
+def html_to_csv(file_path):
+
+    with open(file_path, "r") as file:
+        txt = file.read()
 
     txt = remove_html_tags(txt)
     txt = format(txt)
     txt = dash_to_comma(txt)
     txt = separate_by_line(txt)
-    txt = set_values(txt)
-    txt = remove_keys(txt)
     txt = join_special_values(txt)
+    txt = set_null(txt)
+    txt = remove_keys(txt)
 
-    print(txt[1])
+    with open("trace.csv", "w") as file:
+        for line in txt:
+            file.write(f"{line}\n")
+
+def main():
+    html_to_csv("trace.html")
+
 if __name__ == "__main__":
     main()
