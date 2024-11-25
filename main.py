@@ -62,9 +62,6 @@ def set_values(txt):
         updated_txt.append(','.join(fields))
     return updated_txt
         
-            
-
-    return txt
 def remove_keys(txt):
     updated_txt = []
     for line in txt:
