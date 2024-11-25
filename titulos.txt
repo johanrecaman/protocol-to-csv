@@ -1,0 +1,30 @@
+
+Date
+Time
+evnt_Tracer
+Alt
+Spd
+Rpm
+Tk
+Tk Friction
+Odo
+FuelAvg
+BoostP
+ExhaustP
+AdmTemp
+Regen Status
+NoxIn
+NoxOut
+DOC In
+DOC out
+DPF out
+SCR out
+DpfMaxTemp
+UrLv
+UrTemp
+UrQlty
+SootLoad
+Acl Pos
+Eng.Temp
+Amb.Temp
+Seq

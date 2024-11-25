@@ -1,3 +1,5 @@
+import tkinter as tk
+from tkinter import filedialog
 
 def remove_html_tags(txt):
     start_key = "= ["
@@ -66,9 +68,9 @@ def remove_keys(txt):
         fields = line.split(',')
         values = []
         for field in fields:
-            if ':' in field and '(' not in field:
-                values.append(field.split(':', 1)[1])
-
+            if ':' in field:
+                if '(' not in field and field.count(':') == 1:
+                    values.append(field.split(':', 1)[1])
             else:
                 values.append(field)
         updated_txt.append(','.join(values))
@@ -77,6 +79,12 @@ def remove_keys(txt):
 def separate_by_line(txt):
     return txt.replace("[", "").split("],")
 
+def reileao(txt):
+    newTxt = []
+    for line in txt:
+        line = line.replace(",", ";")
+        newTxt.append(line)
+    return newTxt
 
 def html_to_csv(file_path):
 
@@ -90,13 +98,54 @@ def html_to_csv(file_path):
     txt = join_special_values(txt)
     txt = set_null(txt)
     txt = remove_keys(txt)
+    txt = reileao(txt)
 
-    with open("trace.csv", "w") as file:
-        for line in txt:
-            file.write(f"{line}\n")
+    return txt
 
-def main():
-    html_to_csv("trace.html")
 
-if __name__ == "__main__":
-    main()
+def generate_csv(file_path):
+    headers = ["Lat", "Long", "Valid Pos", "Date", "Time", "event_Tracer", "Alt", "Spd", "Rpm", "Tk", "Tk Friction", "Odo", "FuelAvg", "BoostP", "ExhaustP", "AdmTemp", "Regen Status", "NoxIn", "NoxOut", "DOC In", "DOC out", "DPF out", "SCR out", "DpfMaxTemp", "UrLv", "UrTemp", "UrQlty", "SootLoad", "Acl Pos", "Eng.Temp", "Amb.Temp", "Seq"]
+
+    with open(file_path, mode='w') as csv_file:
+        csv_file.write(";".join(headers) + "\n")
+        for line in converted_file:
+            csv_file.write(line + "\n")
+
+window = tk.Tk()
+window.title("HTML to CSV Converter")
+window.geometry("450x200")
+
+success_msg = tk.Label(window, text="")
+success_msg.pack()
+
+filepath_msg = tk.Label(window, text="")
+filepath_msg.pack()
+
+converted_file = None
+
+def convert_html_to_csv():
+    global converted_file
+    html_file_path = filedialog.askopenfilename(filetypes=[("html files", "*.html")])
+
+    if html_file_path:
+        converted_file = html_to_csv(html_file_path)
+        success_msg.config(text="File converted successfully!")
+        filepath_msg.config(text="File path: " + html_file_path)
+        return
+    success_msg.config(text="File not converted!")
+
+def download_file():
+    csv_file_path = filedialog.asksaveasfilename(defaultextension=".csv", filetypes=[("CSV files", "*.csv")])
+
+    if csv_file_path:
+        generate_csv(csv_file_path)
+        success_msg.config(text="File saved successfully!")
+        return
+    
+convert_button = tk.Button(window, text="Upload File", command=convert_html_to_csv)
+convert_button.pack(pady=20)
+
+download_button = tk.Button(window, text="Download", command=download_file)
+download_button.pack(pady=20)
+
+window.mainloop()
