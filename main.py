@@ -109,7 +109,7 @@ def generate_csv(file_path):
             csv_file.write(line + "\n")
 
 window = tk.Tk()
-window.title("HTML to CSV Converter")
+window.title("HTML to CSV V0.4")
 window.geometry("450x200")
 
 success_msg = tk.Label(window, text="")
@@ -132,7 +132,10 @@ def convert_html_to_csv():
     success_msg.config(text="File not converted!")
 
 def download_file():
-    csv_file_path = filedialog.asksaveasfilename(defaultextension=".csv", filetypes=[("CSV files", "*.csv")])
+    base_filename = filepath_msg.cget("text").split(": ")[
+        1].split("/")[-1].split(".")[0]
+
+    csv_file_path = filedialog.asksaveasfilename(defaultextension=".csv", filetypes=[("CSV files", "*.csv")], initialfile=f"{base_filename}.csv")
 
     if csv_file_path:
         generate_csv(csv_file_path)
