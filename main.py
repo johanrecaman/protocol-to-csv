@@ -16,7 +16,6 @@ def remove_html_tags(txt):
 def format(txt):
     txt = txt.replace("|", ",")
     txt = txt.replace("'", "")
-    txt = txt.replace(" ", "")
     txt = txt.replace("\n", "")
 
     return txt
