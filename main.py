@@ -28,37 +28,35 @@ def dash_to_comma(txt):
         if txt[i] == "-" and txt[i-1] not in exceptions:
             result.append(",")
         elif txt[i] == "-" and txt[i-1] == ":" and not txt[i+1].isdigit():
-            result.append("Null")
+            result.append("")
         else:
             result.append(txt[i]) 
     return ''.join(result)
 
 def join_special_values(txt):
-    null =  "Null"
     modified_lines = []
 
     for line in txt:
         fields = line.split(',')
         if '(' not in line:
-            fields[5:5] = [null]
+            fields[5:5] = [""]
             line = ','.join(fields)
         line = line.replace("),(", ")(")
         modified_lines.append(line)
     return modified_lines
 
 def set_null(txt):
-    null = "Null"
     updated_txt = []
 
     for line in txt:
         fields = line.split(',')
         if "Alt" not in line:
             if '(' in line:
-                fields[6:6] = [null] * 25
+                fields[6:6] = [""] * 25
             else:
-                fields[5:5] = [null] * 25
+                fields[5:5] = [""] * 25
         if len(fields) == 31:
-            fields.append(null)
+            fields.append("")
         updated_txt.append(','.join(fields))
     return updated_txt
         
@@ -68,9 +66,8 @@ def remove_keys(txt):
         fields = line.split(',')
         values = []
         for field in fields:
-            if ':' in field:
-                if '(' not in field and field.count(':') == 1:
-                    values.append(field.split(':', 1)[1])
+            if '(' not in field and field.count(':') == 1:
+                values.append(field.split(':', 1)[1])
             else:
                 values.append(field)
         updated_txt.append(','.join(values))
@@ -79,10 +76,11 @@ def remove_keys(txt):
 def separate_by_line(txt):
     return txt.replace("[", "").split("],")
 
-def reileao(txt):
+def to_excel(txt):
     newTxt = []
     for line in txt:
         line = line.replace(",", ";")
+        line = line.replace(".", ",")
         newTxt.append(line)
     return newTxt
 
@@ -98,7 +96,7 @@ def html_to_csv(file_path):
     txt = join_special_values(txt)
     txt = set_null(txt)
     txt = remove_keys(txt)
-    txt = reileao(txt)
+    txt = to_excel(txt)
 
     return txt
 
