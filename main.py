@@ -117,11 +117,11 @@ def generate_csv(file_path, skip):
         headers = headers[3:]
     with open(file_path, mode='w') as csv_file:
         csv_file.write(";".join(headers) + "\n")
-        for line in converted_file:
+        for line in file:
             csv_file.write(line + "\n")
 
 window = tk.Tk()
-window.title("HTML to CSV V0.4")
+window.title("HTML to CSV V0.5")
 window.geometry("600x200")
 
 success_msg = tk.Label(window, text="")
@@ -130,22 +130,22 @@ success_msg.place(x=0, y=0)
 filepath_msg = tk.Label(window, text="")
 filepath_msg.place(x=0, y=20)
 
-converted_file = None
+file = None
 
-def convert_html_to_csv():
-    global converted_file, var
+def upload_file():
+    global file, var
 
     html_file_path = filedialog.askopenfilename(filetypes=[("html files", "*.html")])
 
     if html_file_path:
-        converted_file = html_to_csv(html_file_path, var.get())
-        success_msg.config(text="File converted successfully!")
+        file = html_file_path
+        success_msg.config(text="File loaded successfully!")
         filepath_msg.config(text="File path: " + html_file_path)
         return
     success_msg.config(text="File not converted!")
 
 def download_file():
-    global var
+    global file, var
     base_filename = filepath_msg.cget("text").split(": ")[
         1].split("/")[-1].split(".")[0]
 
@@ -154,6 +154,7 @@ def download_file():
     csv_file_path = filedialog.asksaveasfilename(defaultextension=".csv", filetypes=[("CSV files", "*.csv")], initialfile=f"{base_filename}.csv")
 
     if csv_file_path:
+        file = html_to_csv(file, var.get())
         generate_csv(csv_file_path, var.get())
         success_msg.config(text="File saved successfully!")
         return
@@ -162,7 +163,7 @@ var = tk.IntVar()
 checkbox = tk.Checkbutton(window, text="Skip Loc", variable=var)
 checkbox.place(x=235, y=50)
 
-convert_button = tk.Button(window, text="Upload File", command=convert_html_to_csv)
+convert_button = tk.Button(window, text="Upload File", command=upload_file)
 convert_button.place(x=315, y=50)
 
 download_button = tk.Button(window, text="Download", command=download_file)
