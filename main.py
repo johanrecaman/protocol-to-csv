@@ -94,8 +94,8 @@ def to_excel(txt):
 
 def html_to_csv(file_path, skip):
 
-    with open(file_path, "r") as file:
-        txt = file.read()
+    with open(file_path, "r") as html:
+        txt = html.read()
 
     txt = remove_html_tags(txt)
     txt = format(txt)
@@ -131,9 +131,10 @@ filepath_msg = tk.Label(window, text="")
 filepath_msg.place(x=0, y=20)
 
 file = None
+html_file_path = None
 
 def upload_file():
-    global file, var
+    global file, var, html_file_path
 
     html_file_path = filedialog.askopenfilename(filetypes=[("html files", "*.html")])
 
@@ -145,7 +146,7 @@ def upload_file():
     success_msg.config(text="File not converted!")
 
 def download_file():
-    global file, var
+    global file, var, html_file_path
     base_filename = filepath_msg.cget("text").split(": ")[
         1].split("/")[-1].split(".")[0]
 
@@ -156,6 +157,7 @@ def download_file():
     if csv_file_path:
         file = html_to_csv(file, var.get())
         generate_csv(csv_file_path, var.get())
+        file = html_file_path
         success_msg.config(text="File saved successfully!")
         return
     
