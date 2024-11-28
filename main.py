@@ -1,3 +1,4 @@
+version = "v0.7"
 import tkinter as tk
 from tkinter import filedialog
 
@@ -121,7 +122,7 @@ def generate_csv(file_path, skip):
             csv_file.write(line + "\n")
 
 window = tk.Tk()
-window.title("HTML to CSV V0.5")
+window.title(f"HTML to CSV {version}")
 window.geometry("600x200")
 
 success_msg = tk.Label(window, text="")
