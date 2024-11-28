@@ -161,10 +161,10 @@ def download_file():
     
 var = tk.IntVar()
 checkbox = tk.Checkbutton(window, text="Skip Loc", variable=var)
-checkbox.place(x=235, y=50)
+checkbox.place(x=315, y=50)
 
 convert_button = tk.Button(window, text="Upload File", command=upload_file)
-convert_button.place(x=315, y=50)
+convert_button.place(x=235, y=50)
 
 download_button = tk.Button(window, text="Download", command=download_file)
 download_button.place(x=530, y=170)
