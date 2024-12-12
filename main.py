@@ -148,8 +148,7 @@ def upload_file():
 
 def download_file():
     global file, var, html_file_path
-    base_filename = filepath_msg.cget("text").split(": ")[
-        1].split("/")[-1].split(".")[0]
+    base_filename = html_file_path.split("/")[-1].split(".")[0]
 
     if var.get():
         base_filename += "H"
